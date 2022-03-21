@@ -13,7 +13,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error('Please add all fields')
   }
-
   // Check if user exists
   const userExists = await User.findOne({ email })
 
@@ -25,20 +24,18 @@ const registerUser = asyncHandler(async (req, res) => {
   // Hash password
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
-
   // Create user
   const user = await User.create({
     name,
     email,
     password: hashedPassword,
   })
-
   if (user) {
-    res.status(201).json({
+    res.status(201).send({
       _id: user.id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id),
+      token: generateToken(user.id)
     })
   } else {
     res.status(400)
@@ -50,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/login
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
 
   // Check for user email
   const user = await User.findOne({ email })
@@ -60,7 +57,7 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id),
+      token: generateToken(user.id),
     })
   } else {
     res.status(400)
@@ -77,7 +74,7 @@ const getMe = asyncHandler(async (req, res) => {
 
 // Generate JWT
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SEC, {
     expiresIn: '30d',
   })
 }

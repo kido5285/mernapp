@@ -1,11 +1,10 @@
 import axios from 'axios'
 
-const API_URL = `http://localhost:${process.env.PORT}/api/users/`
+const API_URL = `http://localhost:${process.env.PORT || 5000}/api/users/`
 
 // Register user
 const register = async (userData) => {
   const response = await axios.post(API_URL, userData)
-
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data))
   }
@@ -15,13 +14,13 @@ const register = async (userData) => {
 
 // Login user
 const login = async (userData) => {
-  const response = await axios.post(API_URL + 'login', userData)
-
-  if (response.data) {
-    localStorage.setItem('user', JSON.stringify(response.data))
+  const res = await axios.post(API_URL + 'login', userData)
+  console.log(res)
+  if (res.data) {
+    localStorage.setItem('user', JSON.stringify(res.data))
   }
 
-  return response.data
+  return res;
 }
 
 // Logout user

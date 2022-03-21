@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = `http://localhost:${process.env.PORT}/api/goals/`
+const API_URL = `http://localhost:${process.env.PORT || 5000}/api/goals/`
 
 // Create new goal
 const createGoal = async (goalData, token) => {
@@ -17,6 +17,7 @@ const createGoal = async (goalData, token) => {
 
 // Get user goals
 const getGoals = async (token) => {
+  console.log(token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
